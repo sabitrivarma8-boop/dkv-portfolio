@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devesh Varma — Digital Recovery & Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0d12;
+    --bg-soft: #10141b;
+    --panel: #131822;
+    --line: #1f2733;
+    --text: #e7ecf3;
+    --muted: #8893a3;
+    --gold: #d4af6a;
+    --cyan: #5fd9c9;
+    --blue: #5b8cff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .display{font-family:'Sora',sans-serif;}
+
+  /* background grid texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(95,217,201,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(95,217,201,0.04) 1px, transparent 1px);
+    background-size:42px 42px;
+    pointer-events:none;
+    z-index:0;
+  }
+  .glow{
+    position:fixed; top:-200px; right:-150px;
+    width:600px; height:600px;
+    background:radial-gradient(circle, rgba(91,140,255,0.18), transparent 70%);
+    pointer-events:none; z-index:0;
+  }
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 6%;
+    background:rgba(10,13,18,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{font-family:'Sora',sans-serif; font-weight:800; font-size:1.15rem; letter-spacing:0.5px;}
+  .logo span{color:var(--gold);}
+  nav ul{list-style:none; display:flex; gap:32px;}
+  nav a{color:var(--muted); text-decoration:none; font-size:0.92rem; font-weight:500; transition:color .25s;}
+  nav a:hover{color:var(--cyan);}
+
+  section{position:relative; z-index:1; padding:110px 6%;}
+  .hero{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:60px; min-height:88vh; padding-top:60px;
+  }
+  .hero-text{max-width:560px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+    color:var(--cyan); border:1px solid rgba(95,217,201,0.3);
+    padding:6px 14px; border-radius:30px; margin-bottom:24px;
+    background:rgba(95,217,201,0.05);
+  }
+  .eyebrow::before{content:"●"; color:var(--cyan); font-size:0.6rem;}
+  h1{
+    font-family:'Sora',sans-serif; font-weight:800;
+    font-size:3.2rem; line-height:1.12; letter-spacing:-1px;
+  }
+  h1 .accent{
+    background:linear-gradient(90deg, var(--cyan), var(--blue));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.lead{
+    margin-top:22px; color:var(--muted); font-size:1.08rem; line-height:1.7; max-width:480px;
+  }
+  .typed-line{
+    margin-top:28px; font-family:'JetBrains Mono',monospace;
+    font-size:0.92rem; color:var(--gold);
+    border-left:2px solid var(--gold); padding-left:14px;
+  }
+  .cta-row{display:flex; gap:16px; margin-top:38px; flex-wrap:wrap;}
+  .btn{
+    font-family:'Sora',sans-serif; font-weight:600; font-size:0.92rem;
+    padding:14px 28px; border-radius:8px; text-decoration:none;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn-primary{
+    background:linear-gradient(90deg, var(--cyan), var(--blue));
+    color:#06090d;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 30px rgba(91,140,255,0.25);}
+  .btn-outline{
+    border:1px solid var(--line); color:var(--text);
+  }
+  .btn-outline:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  .portrait-wrap{
+    position:relative; width:340px; height:420px; flex-shrink:0;
+  }
+  .portrait-wrap img{
+    width:100%; height:100%; object-fit:cover;
+    border-radius:14px;
+    border:1px solid var(--line);
+    box-shadow:0 30px 60px rgba(0,0,0,0.5);
+  }
+  .portrait-frame{
+    position:absolute; top:18px; left:18px; right:-18px; bottom:-18px;
+    border:1px solid var(--gold); border-radius:14px; z-index:-1;
+  }
+
+  .section-head{margin-bottom:50px; max-width:600px;}
+  .tag{
+    font-family:'JetBrains Mono',monospace; color:var(--cyan); font-size:0.8rem; letter-spacing:1px; text-transform:uppercase;
+  }
+  h2{font-family:'Sora',sans-serif; font-weight:700; font-size:2.1rem; margin-top:10px;}
+
+  .services{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    padding:32px 26px; transition:border-color .25s, transform .25s;
+  }
+  .card:hover{border-color:var(--cyan); transform:translateY(-6px);}
+  .card .num{font-family:'JetBrains Mono',monospace; color:var(--gold); font-size:0.8rem;}
+  .card h3{font-family:'Sora',sans-serif; font-size:1.18rem; margin:14px 0 10px; font-weight:700;}
+  .card p{color:var(--muted); font-size:0.92rem; line-height:1.6;}
+
+  .about{display:flex; gap:60px; align-items:center;}
+  .about img{
+    width:300px; border-radius:14px; border:1px solid var(--line);
+    filter:grayscale(15%);
+  }
+  .about-text p{color:var(--muted); line-height:1.8; margin-bottom:16px; font-size:1rem;}
+  .skill-tags{display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;}
+  .skill-tags span{
+    font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+    border:1px solid var(--line); padding:7px 14px; border-radius:20px; color:var(--cyan);
+  }
+
+  .contact{
+    text-align:center; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--bg-soft);
+  }
+  .contact h2{margin-bottom:14px;}
+  .contact p{color:var(--muted); margin-bottom:34px;}
+  .social-row{display:flex; justify-content:center; gap:20px; flex-wrap:wrap;}
+  .social-card{
+    display:flex; align-items:center; gap:12px;
+    border:1px solid var(--line); padding:16px 24px; border-radius:10px;
+    color:var(--text); text-decoration:none; background:var(--panel);
+    transition:border-color .25s, transform .25s;
+  }
+  .social-card:hover{border-color:var(--gold); transform:translateY(-3px);}
+
+  footer{
+    text-align:center; padding:30px 6%; color:var(--muted); font-size:0.85rem;
+    font-family:'JetBrains Mono',monospace;
+  }
+  footer span{color:var(--gold);}
+
+  @media (max-width:900px){
+    .hero{flex-direction:column-reverse; text-align:center; padding-top:40px;}
+    .hero-text{max-width:100%;}
+    .hero p.lead, .typed-line{margin-left:auto; margin-right:auto;}
+    .cta-row{justify-content:center;}
+    .portrait-wrap{width:260px; height:320px;}
+    .services{grid-template-columns:1fr;}
+    .about{flex-direction:column;}
+    .about img{width:220px;}
+    h1{font-size:2.2rem;}
+    nav ul{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+
+<nav>
+  <div class="logo">DKV<span>.</span></div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="eyebrow">Available for work</div>
+    <h1>Devesh Varma<br><span class="accent">Account Recovery & Device Solutions</span></h1>
+    <p class="lead">I help people regain access to suspended social media accounts and fix phone software issues — with a practical, hands-on understanding of cyber security fundamentals.</p>
+    <div class="typed-line">&gt; restoring access, one account at a time_</div>
+    <div class="cta-row">
+      <a href="#contact" class="btn btn-primary">Get in touch</a>
+      <a href="https://www.instagram.com/dkv_deveshvarma07" target="_blank" class="btn btn-outline">View Instagram</a>
+    </div>
+  </div>
+  <div class="portrait-wrap">
+    <div class="portrait-frame"></div>
+    <img src="assets/devesh-portrait.jpg" alt="Devesh Varma">
+  </div>
+</section>
+
+<section id="services">
+  <div class="section-head">
+    <div class="tag">What I do</div>
+    <h2>Services</h2>
+  </div>
+  <div class="services">
+    <div class="card">
+      <div class="num">01</div>
+      <h3>Account Recovery</h3>
+      <p>Recovering suspended or locked social media accounts — Instagram, YouTube, and other platforms — by working through the platform's official recovery process.</p>
+    </div>
+    <div class="card">
+      <div class="num">02</div>
+      <h3>Cyber Security Basics</h3>
+      <p>Guidance on securing your accounts: strong passwords, two-factor authentication, and spotting suspicious activity before it becomes a problem.</p>
+    </div>
+    <div class="card">
+      <div class="num">03</div>
+      <h3>Phone Troubleshooting</h3>
+      <p>Diagnosing and fixing common phone issues — software glitches, app problems, storage, and settings — to get your device running smoothly again.</p>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <img src="assets/devesh-full.jpg" alt="Devesh Varma">
+  <div class="about-text">
+    <div class="tag">About me</div>
+    <h2 style="margin-bottom:18px;">A bit about my work</h2>
+    <p>I'm Devesh Varma. I work on helping people recover access to their social media accounts when they get suspended, and I troubleshoot common phone problems for friends, family, and clients.</p>
+    <p>I also keep building my understanding of cyber security — how accounts get compromised, how recovery systems work, and how to stay safer online.</p>
+    <div class="skill-tags">
+      <span>Account Recovery</span>
+      <span>Cyber Security</span>
+      <span>Phone Troubleshooting</span>
+      <span>Social Media Support</span>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="tag">Let's connect</div>
+  <h2>Get in touch</h2>
+  <p>Reach out for account recovery help, phone issues, or just to say hi.</p>
+  <div class="social-row">
+    <a class="social-card" href="mailto:dkvhalp@gmail.com">📧 dkvhalp@gmail.com</a>
+    <a class="social-card" href="https://www.instagram.com/dkv_deveshvarma07" target="_blank">📷 Instagram</a>
+    <a class="social-card" href="https://youtube.com/@dkv_deveshvarma08" target="_blank">▶️ YouTube</a>
+  </div>
+</section>
+
+<footer>
+  © 2026 Devesh Varma — Built with <span>care</span>.
+</footer>
+
+</body>
+</html>
